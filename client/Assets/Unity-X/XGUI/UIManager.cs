@@ -328,9 +328,6 @@ public class UIManager : MonoSingleton<UIManager>
 	private Dictionary<Type, GameObject> menuCaches = new Dictionary<Type, GameObject>();
 	private Transform _mainCanvas = null;
 
-	// private List<MenuStackInfo> _menuStack = new List<MenuStackInfo>();
-	// private UIMenu _currMenu = null;
-	// private List<ui>
 	private List<UIMenu> _menuStack = new List<UIMenu>();
 	// private List<UIMenu> _showMenus = new List<UIMenu>();
 	private List<UIMenu> _menuCache = new List<UIMenu>();
@@ -340,7 +337,7 @@ public class UIManager : MonoSingleton<UIManager>
 	{
 		base.Awake();
 
-		_mainCanvas = GameObject.Find("MainCanvas").transform;
+		// _mainCanvas = GameObject.Find("MainCanvas").transform;
 		Debug.Assert(_mainCanvas != null, "CHECK");
 	}
 

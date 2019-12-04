@@ -38,7 +38,11 @@ Canvas / Sub-Canvas 父子关系的时候
 
 batch 计算是在 CPU 上面
 
+// https://learn.unity.com/tutorial/optimizing-unity-ui#5c7f8528edbc2a002053b5a2
+Important reminder: Whenever any drawable UI element on a given Canvas changes, the Canvas must re-run the batch building process. This process re-analyzes every drawable UI element on the Canvas, regardless of whether it has changed or not. Note that a “change” is any change which affects a UI object’s appearance, including the sprite assigned to a sprite renderer, transform position & scale, the text contained in a text mesh, etc.
+
 优化建议：
 https://www.youtube.com/watch?v=_wxitgdx-UI
 https://create.unity3d.com/Unity-UI-optimization-tips
 https://learn.unity.com/tutorial/optimizing-unity-ui
+https://forum.unity.com/threads/unity-ui-performance-tips-sharing-my-findings.524916/
