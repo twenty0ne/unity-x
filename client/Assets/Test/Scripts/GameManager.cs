@@ -7,6 +7,9 @@ public class GameManager : MonoSingleton<GameManager>
 	private GameState _currGameState = null;
 	private GameState _prevGameState = null;
 
+	public GameState CurrGameState { get { return _currGameState; } }
+	public GameState PrevGameState { get { return _prevGameState; } }
+
 	[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
 	static void OnBeforeSceneLoadRuntimeMethod()
 	{

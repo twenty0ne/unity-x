@@ -17,11 +17,6 @@ public class GSLoading : GameState
 	{
 		if (_loadingStep == LoadingStep.None)
 			ChangeLoadingStep(_loadingStep + 1);
-		
-		if (_loadingStep >= LoadingStep.Count)
-		{
-
-		}
 	}
 
 	private void ChangeLoadingStep(LoadingStep step)

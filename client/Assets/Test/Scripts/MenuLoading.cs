@@ -8,6 +8,8 @@ public class MenuLoading : UIMenu
 	public Text statusLabel;
 	public UIProgress progressBar;
 
+	private bool _bLoadingDone = false;
+
 	public static string Name { get { return "MenuLoading"; } }
 
 #if UNITY_EDITOR
@@ -32,7 +34,11 @@ public class MenuLoading : UIMenu
 
 	public override void Tick(float dt)
 	{
-		
+		if (_bLoadingDone && Input.GetKeyDown(KeyCode.Mouse0))
+		{
+			// TODO:
+			// need deactive other menus
+		}
 	}
 
 	private void OnEvtLoadingBegin(Event evt)
@@ -58,6 +64,11 @@ public class MenuLoading : UIMenu
 		else if (nevt.val == (int)LoadingStep.Main)
 		{
 			statusLabel.text = "Loading Main...";
+		}
+		else if (nevt.val == (int)LoadingStep.Count)
+		{
+			statusLabel.text = "Click To Enter.";
+			_bLoadingDone = true;
 		}
 
 		float percent = nevt.val * 100.0f / (int)LoadingStep.Count;

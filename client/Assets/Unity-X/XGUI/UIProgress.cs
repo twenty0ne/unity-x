@@ -14,8 +14,7 @@ public class UIProgress : UIWidget
 
 	private void Start()
 	{
-		_originSize = fillBar.sizeDelta;
-		Debug.Log("xx-- originSize > " + _originSize);
+		_originSize = fillBar.rect.size;
 	}
 
 	public void SetValueFormat(string foramt)
@@ -25,16 +24,11 @@ public class UIProgress : UIWidget
 
 	public void SetPercent(float value)
 	{
-		// if (_currValue == val)
-		// 	return;
-
 		_currValue = value;
-
-		Debug.Log("xx-- percent value > " + _originSize.x * _currValue * 0.01f);
 
 		if (valueLabel != null)
 			valueLabel.text = string.Format(_valueFormat, _currValue);
 		
-		fillBar.sizeDelta = new Vector2(_originSize.x * _currValue * 0.01f, _originSize.y);
+		fillBar.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, _originSize.x * _currValue * 0.01f);
 	}
 }

@@ -4,31 +4,11 @@ using UnityEngine;
 
 public class MenuMain : UIMenu
 {
-	// public Transform tfIconBag;
+	public static string Name { get { return "MenuMain"; } }
 
 	private void Start()
 	{
 	}
-
-	// public void OnClickWidgetMainIcon(WidgetMainIcon widget)
-	// {
-	// 	// UIManager.Instance.OpenMenu("MenuLogin");
-	// 	// if (widget)
-	// }
-	private void Update() 
-	{
-		// if (Input.GetKeyDown(KeyCode.Space))
-		// {
-		// 	TestMove();
-		// }
-	}
-
-	// public void TestMove()
-	// {
-	// 	Vector3 pos = tfIconBag.position;
-	// 	pos.y += 0.01f;
-	// 	tfIconBag.position = pos;
-	// }
 
 	public void OnClickBtnBag()
 	{
