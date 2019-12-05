@@ -10,6 +10,6 @@ public class UIRoot : MonoBehaviour
 
 	private void Awake()
 	{
-		UIManager.Instance.mainCanvas
+		UIManager.Instance.AddCanvas("main", mainCanvas, true);
 	}
 }

@@ -1,12 +1,11 @@
 
 public class GSLoading : GameState
 {
-	private MenuLoading _mloading = null;
 	private LoadingStep _loadingStep = LoadingStep.None;
 
 	public override void Enter(GameState gs)
 	{
-		_mloading = (MenuLoading)UIManager.Instance.OpenMenu(MenuLoading.Name);
+		UIManager.Instance.OpenMenu(MenuLoading.Name);
 	}
 
 	public override void Exit(GameState gs)
@@ -49,17 +48,26 @@ public class GSLoading : GameState
 
 	private void OnLoadingStepLogin()
 	{
-
+		// FAKE: test
+		TimeUtils.WaitForSeconds(2f, () => {
+			ChangeLoadingStep(_loadingStep + 1);
+		});
 	}
 
 	private void OnLoadingStepData()
 	{
-
+		// FAKE: test
+		TimeUtils.WaitForSeconds(2f, () => {
+			ChangeLoadingStep(_loadingStep + 1);
+		});
 	}
 
 	private void OnLoadingStepMain()
 	{
-
+		// FAKE: test
+		TimeUtils.WaitForSeconds(2f, () => {
+			ChangeLoadingStep(_loadingStep + 1);
+		});
 	}
 
 	private void OnLoadingStepEnd()

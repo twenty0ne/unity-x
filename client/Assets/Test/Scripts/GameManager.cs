@@ -13,9 +13,10 @@ public class GameManager : MonoSingleton<GameManager>
 		var gm = GameManager.Instance;
 	}
 
-	protected override void Awake()
+	private void Start()
 	{
-		base.Awake();
+		// Init
+		UIManager.Instance.MenuPrefabPath = "Test/Prefabs/";
 
 		var gs = new GSLoading();
 		ChangeGameState(gs);

@@ -35,7 +35,7 @@ public class AssetManager // : MonoSingleton<AssetManager>
 			var ass = (T)AssetDatabase.LoadAssetAtPath<T>(path);
 			if (ass == null)
 			{
-				Debug.LogWarning("faild to load asset at path > " + path);
+				Logger.Error("faild to load asset at path > " + path);
 			}
 			else
 			{
@@ -97,7 +97,7 @@ public class AssetManager // : MonoSingleton<AssetManager>
 	{
 		try
 		{
-			#if UNITY_EDITOR 
+#if UNITY_EDITOR 
 			var assText = LoadAsset<TextAsset>("Configs/" + path);
 			if (assText == null)
 			{
@@ -106,11 +106,11 @@ public class AssetManager // : MonoSingleton<AssetManager>
 			}
 			return JsonUtility.FromJson<T>(assText.ToString());
 			   
-			#else
+#else
 			throw new NotImplementedException();
 			// var assText = Resources.Load<TextAsset>(path);
 			// return JsonUtility.FromJson<T>(assText.ToString());
-			#endif
+#endif
 		}
 		catch (Exception ex)
 		{
@@ -127,7 +127,7 @@ public class AssetManager // : MonoSingleton<AssetManager>
 			var ass = LoadAsset<GameObject>(path);
 			if (ass == null)
 			{
-				Debug.LogWarning("failed to load gameobject > " + path);
+				Debug.LogError("failed to load gameobject > " + path);
 			}
 			return UnityEngine.Object.Instantiate(ass);
 #else
@@ -158,12 +158,12 @@ public class AssetManager // : MonoSingleton<AssetManager>
 
 				string sprName = args[1].Replace("@ss", "");
 				
-				#if UNITY_EDITOR
+#if UNITY_EDITOR
 				UnityEngine.Object[] sprs = LoadAllAsset("Sprites/" + args[0]);
-				#else
+#else
 				// UnityEngine.Object[] sprs = Resources.LoadAll("Sprites/" + args[0]);
 				throw new NotImplementedException();
-				#endif
+#endif
 				for (int i = 0; i < sprs.Length; ++i)
 				{
 					if (sprs[i] is Sprite)
@@ -179,11 +179,11 @@ public class AssetManager // : MonoSingleton<AssetManager>
 			}
 			else
 			{
-				#if UNITY_EDITOR
+#if UNITY_EDITOR
 				spr = LoadAsset<Sprite>("Sprites/" + path);
-				#else
+#else
 				spr = Resources.Load<Sprite>("Sprites/" + path);
-				#endif
+#endif
 			}
 
 			if (spr == null)

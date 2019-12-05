@@ -6,8 +6,17 @@ using UnityEngine.UI;
 public class MenuLoading : UIMenu
 {
 	public Text statusLabel;
+	public UIProgress progressBar;
 
 	public static string Name { get { return "MenuLoading"; } }
+
+#if UNITY_EDITOR
+	private void OnValidate()
+	{
+		Debug.Assert(statusLabel);
+		Debug.Assert(progressBar);
+	}
+#endif
 
 	protected override void OnShow()
 	{
@@ -50,6 +59,9 @@ public class MenuLoading : UIMenu
 		{
 			statusLabel.text = "Loading Main...";
 		}
+
+		float percent = nevt.val * 100.0f / (int)LoadingStep.Count;
+		progressBar.SetPercent(percent);
 	}
 
 	private void OnEvtLoadingEnd(Event evt)

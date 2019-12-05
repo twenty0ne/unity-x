@@ -15,10 +15,9 @@ public class UIWidget : MonoBehaviour, IEventListener
 		_rt = GetComponent<RectTransform>();
 	}
 
-	protected virtual void OnCreate()
-	{
-
-	}
+	// protected virtual void OnCreate()
+	// {
+	// }
 
 	protected virtual void OnClean()
 	{

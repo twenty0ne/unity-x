@@ -323,22 +323,27 @@ public class MenuCacheInfo
 // menu stack: record menu open 
 public class UIManager : MonoSingleton<UIManager>
 {
-	public const string PATH_PREFAB_MENU = "Prefabs/";
+	// public const string PATH_PREFAB_MENU = "Prefabs/";
 
 	private Dictionary<Type, GameObject> menuCaches = new Dictionary<Type, GameObject>();
-	private Transform _mainCanvas = null;
+	// private Transform _mainCanvas = null;
 
 	private List<UIMenu> _menuStack = new List<UIMenu>();
 	// private List<UIMenu> _showMenus = new List<UIMenu>();
 	private List<UIMenu> _menuCache = new List<UIMenu>();
 	private UIMenu _topMenu = null;
 
+	private Canvas _defaultCanvas;
+	private Dictionary<string, Canvas> _rootCanvas = new Dictionary<string, Canvas>();
+
+	public string MenuPrefabPath { get; set; }
+
 	protected override void Awake() 
 	{
 		base.Awake();
 
 		// _mainCanvas = GameObject.Find("MainCanvas").transform;
-		Debug.Assert(_mainCanvas != null, "CHECK");
+		// Debug.Assert(_mainCanvas != null, "CHECK");
 	}
 
 	private void Update()
@@ -350,22 +355,37 @@ public class UIManager : MonoSingleton<UIManager>
 		}
 	}
 
-	public GameObject TryGetMenu(Type tp)
+	public void AddCanvas(string key, Canvas cs, bool isDefault)
 	{
-		if (menuCaches.ContainsKey(tp))
-			return menuCaches[tp];
+		if (_rootCanvas.ContainsKey(key))
+		{
+			Logger.Error("exist same key canvas > " + key);
+			return;
+		}
 
-		// Load from Assets
-		string path = PATH_PREFAB_MENU + tp.ToString() + ".prefab";
-		GameObject obj = AssetManager.LoadGameObject(path);
-		Debug.Assert(obj != null, "CHECK");
-		obj.transform.SetParent(_mainCanvas.transform, false);
-
-		return obj;
+		_rootCanvas[key] = cs;
+		if (isDefault)
+			_defaultCanvas = cs;
 	}
+
+	// public GameObject TryGetMenu(Type tp)
+	// {
+	// 	if (menuCaches.ContainsKey(tp))
+	// 		return menuCaches[tp];
+
+	// 	// Load from Assets
+	// 	string path = PATH_PREFAB_MENU + tp.ToString() + ".prefab";
+	// 	GameObject obj = AssetManager.LoadGameObject(path);
+	// 	Debug.Assert(obj != null, "CHECK");
+	// 	obj.transform.SetParent(_mainCanvas.transform, false);
+
+	// 	return obj;
+	// }
 
 	public UIMenu OpenMenu(string name)
 	{
+		Debug.Assert(_defaultCanvas != null);
+
 		// UIMenu newMenu = null;
 		// MenuStackInfo minfo = FindMenuStackInfo(name);
 		// if (minfo != null)
@@ -377,10 +397,10 @@ public class UIManager : MonoSingleton<UIManager>
 		UIMenu menu = FindMenuInCache(name);
 		if (menu == null)
 		{
-			string path = PATH_PREFAB_MENU + name + ".prefab";
+			string path = MenuPrefabPath + name + ".prefab";
 			GameObject obj = AssetManager.LoadGameObject(path);
 			Debug.Assert(obj != null, "CHECK");
-			obj.transform.SetParent(_mainCanvas, false);
+			obj.transform.SetParent(_defaultCanvas.transform, false);
 
 			menu = obj.GetComponent<UIMenu>();
 			Debug.Assert(menu, "CHECK");
