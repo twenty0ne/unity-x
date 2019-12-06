@@ -44,7 +44,7 @@ public class GSLoading : GameState
 	private void OnLoadingStepLogin()
 	{
 		// FAKE: test
-		TimeUtils.WaitForSeconds(2f, () => {
+		TimeUtils.WaitForSeconds(0.1f, () => {
 			ChangeLoadingStep(_loadingStep + 1);
 		});
 	}
@@ -52,7 +52,7 @@ public class GSLoading : GameState
 	private void OnLoadingStepData()
 	{
 		// FAKE: test
-		TimeUtils.WaitForSeconds(2f, () => {
+		TimeUtils.WaitForSeconds(0.1f, () => {
 			ChangeLoadingStep(_loadingStep + 1);
 		});
 	}
@@ -60,7 +60,7 @@ public class GSLoading : GameState
 	private void OnLoadingStepMain()
 	{
 		// FAKE: test
-		TimeUtils.WaitForSeconds(2f, () => {
+		TimeUtils.WaitForSeconds(0.1f, () => {
 			ChangeLoadingStep(_loadingStep + 1);
 		});
 	}
@@ -68,5 +68,8 @@ public class GSLoading : GameState
 	private void OnLoadingStepEnd()
 	{
 		EventManager.Instance.Dispatch(EventName.LoadingEnd);
+
+		var gs = new GSMain();
+		GameManager.Instance.ChangeGameState(gs);
 	}
 }

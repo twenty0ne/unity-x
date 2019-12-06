@@ -6,7 +6,7 @@ public class GSMain : GameState
 {
 	public override void Enter(GameState gs)
 	{
-		UIManager.Instance.OpenMenu(MenuLoading.Name);
+		UIManager.Instance.OpenMenu(MenuMain.Name);
 	}
 
 	public override void Exit(GameState gs)
