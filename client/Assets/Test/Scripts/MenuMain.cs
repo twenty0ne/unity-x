@@ -34,12 +34,8 @@ public class MenuMain : UIMenu
 
 	protected override void OnShow()
 	{
-		float tabUnitWidth = Screen.width * 1.0f / ((int)TabIndex.Count + 1);
-		_selectedTabWidth = tabUnitWidth * 2;
-		_unselectedTabWidth = tabUnitWidth;
-
-		var curTabRT = tabs[_curTabBarIndex].GetComponent<RectTransform>();
-		curTabRT.SetSizeWithCurrentAnchors()
+		Debug.Log("MenuMain.OnShow");
+		UpdateTabs();
 	}
 
 	public void OnClickTabBar(int idx)
@@ -57,5 +53,34 @@ public class MenuMain : UIMenu
 		// set cur tab bar
 		_curTabBarIndex = idx;
 		// tabs[idx].
+		UpdateTabs();
+	}
+
+	private void UpdateTabs()
+	{
+		float tabUnitWidth = Screen.width * 1.0f / ((int)TabIndex.Count + 1);
+		_selectedTabWidth = tabUnitWidth * 2;
+		_unselectedTabWidth = tabUnitWidth;
+
+		Debug.Log("MenuMain.OnShow > " + _selectedTabWidth + " - " + _unselectedTabWidth);
+
+		for (int i = 0; i < tabs.Length; ++i)
+		{
+			var curTabRT = tabs[i].GetComponent<RectTransform>();
+
+			var curPos = curTabRT.anchoredPosition;
+			curPos.x = (i - 2) * tabUnitWidth;
+
+			if (i < _curTabBarIndex)
+				curPos.x -= tabUnitWidth * 0.5f;
+			else if (i > _curTabBarIndex)
+				curPos.x += tabUnitWidth * 0.5f;
+			curTabRT.anchoredPosition = curPos;
+
+			if (i == _curTabBarIndex)
+				curTabRT.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, _selectedTabWidth);
+			else
+				curTabRT.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, _unselectedTabWidth);
+		}
 	}
 }
