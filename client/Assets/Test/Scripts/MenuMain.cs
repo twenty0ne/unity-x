@@ -52,7 +52,6 @@ public class MenuMain : UIMenu
 
 		// set cur tab bar
 		_curTabBarIndex = idx;
-		// tabs[idx].
 		UpdateTabs();
 	}
 
