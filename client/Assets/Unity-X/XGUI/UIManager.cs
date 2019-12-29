@@ -325,12 +325,14 @@ public class UIManager : MonoSingleton<UIManager>
 {
 	// public const string PATH_PREFAB_MENU = "Prefabs/";
 
-	private Dictionary<Type, GameObject> menuCaches = new Dictionary<Type, GameObject>();
+	// private Dictionary<Type, GameObject> menuCaches = new Dictionary<Type, GameObject>();
 	// private Transform _mainCanvas = null;
 
 	private List<UIMenu> _menuStack = new List<UIMenu>();
 	// private List<UIMenu> _showMenus = new List<UIMenu>();
-	private List<UIMenu> _menuCache = new List<UIMenu>();
+	// private List<UIMenu> _menuCache = new List<UIMenu>();
+	// private Dictionary<string, UIMenu> _menuStack = new Dictionary<string, UIMenu>();
+	private Dictionary<string, UIMenu> _menuCache = new Dictionary<string, UIMenu>();
 	private UIMenu _topMenu = null;
 
 	private Canvas _defaultCanvas;
@@ -351,7 +353,8 @@ public class UIManager : MonoSingleton<UIManager>
 		float dt = Time.deltaTime;
 		for (int i = 0; i < _menuStack.Count; ++i)
 		{
-			_menuStack[i].Tick(dt);
+			UIMenu menu = _menuStack[i];
+			menu.Tick(dt);
 		}
 	}
 
@@ -386,14 +389,6 @@ public class UIManager : MonoSingleton<UIManager>
 	{
 		Debug.Assert(_defaultCanvas != null);
 
-		// UIMenu newMenu = null;
-		// MenuStackInfo minfo = FindMenuStackInfo(name);
-		// if (minfo != null)
-		// {
-		// 	// MoveToStackTop(upInfo);
-		// 	newMenu = minfo.menu;
-		// 	_menuStack.Remove(minfo);
-		// }
 		UIMenu menu = FindMenuInCache(name);
 		if (menu == null)
 		{
@@ -405,7 +400,7 @@ public class UIManager : MonoSingleton<UIManager>
 			menu = obj.GetComponent<UIMenu>();
 			Debug.Assert(menu, "CHECK");
 			menu.onHide += OnMenuHide;
-			_menuCache.Add(menu);
+			_menuCache[name] = menu;
 		}
 
 		// set top menu
@@ -423,30 +418,64 @@ public class UIManager : MonoSingleton<UIManager>
 		return menu;
 	}
 
-	public void CloseMenu(UIMenu menu)
+	public void CloseMenu(string menuName, bool cleanup = false)
 	{
-		menu.Deactive();
+		var menu = FindMenuInCache(menuName);
+		if (menu == null)
+		{
+			Logger.Warning("cant find menu > " + menuName);
+			return;
+		}
+
+		this.CloseMenu(menu, cleanup);
+	}
+
+	public void CloseMenu(UIMenu menu, bool cleanup = false)
+	{
+		// menu.Deactive();
 		menu.Hide();
+
+		if (_topMenu == menu)
+			_topMenu = null;
 
 		// 关闭的界面从 stack 中清除
 		_menuStack.Remove(menu);
 		// 从堆栈中返回最后一个
-		Debug.Assert(_menuStack.Count > 0, "CHECK");
-		UIMenu stackTopMenu = _menuStack[_menuStack.Count - 1];
-		stackTopMenu.Show();
-		_topMenu = stackTopMenu;
+		if (_menuStack.Count > 0)
+		{
+			UIMenu stackTopMenu = _menuStack[_menuStack.Count - 1];
+			stackTopMenu.Show();
+			_topMenu = stackTopMenu;
+		}
+
+		if (cleanup)
+		{
+			foreach(var kv in _menuCache)
+			{
+				if (kv.Value == menu)
+				{
+					_menuCache.Remove(kv.Key);
+					break;
+				}
+			}
+			Destroy(menu.gameObject);
+		}
 	}
 
-	private UIMenu FindMenuInStack(string name)
-	{
-		UIMenu menu = _menuStack.Find(x => x.name == name);
-		return menu;
-	}
+	// private UIMenu FindMenuInStack(string name)
+	// {
+	// 	// UIMenu menu = null;
+	// 	// if (_menuStack.TryGetValue(name, out menu))
+	// 	// 	return null;
+	// 	// return menu;
+	// }
 
 	private UIMenu FindMenuInCache(string name)
 	{
-		UIMenu menu = _menuCache.Find(x => x.name == name);
-		return menu;
+		UIMenu menu = null;
+		if (_menuCache.TryGetValue(name, out menu))
+			return menu;
+		return null;
 	}
 
 	// private void MoveToMenuStackTop(UIPanelInfo upInfo)

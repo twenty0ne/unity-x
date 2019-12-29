@@ -92,6 +92,30 @@ public class AssetManager // : MonoSingleton<AssetManager>
 			return null;
 		}
 	}
+
+	public static string LoadConfig(string path)
+	{
+		try
+		{
+#if UNITY_EDITOR 
+			var assText = LoadAsset<TextAsset>(path);
+			if (assText == null)
+			{
+				Debug.Log("failed to load config > " + path);
+				return null;
+			}
+			var kk = assText.ToString();
+			return assText.text;
+#else
+			throw new NotImplementedException();
+#endif
+		}
+		catch (Exception ex)
+		{
+			Debug.LogError(ex.ToString());
+			return null;
+		}
+	}
 		
 	public static T LoadConfig<T>(string path) where T : class, new()
 	{
@@ -105,7 +129,6 @@ public class AssetManager // : MonoSingleton<AssetManager>
 				return null;
 			}
 			return JsonUtility.FromJson<T>(assText.ToString());
-			   
 #else
 			throw new NotImplementedException();
 			// var assText = Resources.Load<TextAsset>(path);
@@ -180,9 +203,9 @@ public class AssetManager // : MonoSingleton<AssetManager>
 			else
 			{
 #if UNITY_EDITOR
-				spr = LoadAsset<Sprite>("Sprites/" + path);
+				spr = LoadAsset<Sprite>(path);
 #else
-				spr = Resources.Load<Sprite>("Sprites/" + path);
+				spr = Resources.Load<Sprite>(path);
 #endif
 			}
 

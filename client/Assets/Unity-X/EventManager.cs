@@ -10,33 +10,30 @@ public interface IEventListener
 public class EventManager : Singleton<EventManager>
 {
 	public delegate void EventCallback(Event evt);
+	private Dictionary<int, Dictionary<IEventListener, EventCallback>> _listeners = new Dictionary<int, Dictionary<IEventListener, EventCallback>>();
 
-	public Dictionary<string, Dictionary<IEventListener, EventCallback>> listeners = new Dictionary<string, Dictionary<IEventListener, EventCallback>>();
-
-	public void Add(string evtName, IEventListener lt, EventCallback cb)
+	public void Add(int eventId, IEventListener lt, EventCallback cb)
 	{
-		Debug.Assert(string.IsNullOrEmpty(evtName) == false, "CHECK");
 		Debug.Assert(lt != null, "CHECK");
 		Debug.Assert(cb != null, "CHECK");
 
-		if (!listeners.ContainsKey(evtName))
-			listeners.Add(evtName, new Dictionary<IEventListener, EventCallback>());
+		if (!_listeners.ContainsKey(eventId))
+			_listeners.Add(eventId, new Dictionary<IEventListener, EventCallback>());
 
-		listeners[evtName].Add(lt, cb);
+		_listeners[eventId].Add(lt, cb);
 	}
 
-	public void Remove(string evtName, IEventListener lt)
+	public void Remove(int eventId, IEventListener lt)
 	{
-		Debug.Assert(string.IsNullOrEmpty(evtName) == false, "CHECK");
 		Debug.Assert(lt != null, "CHECK");
 
-		if (listeners.ContainsKey(evtName))
+		if (_listeners.ContainsKey(eventId))
 		{
-			listeners[evtName].Remove(lt);
+			_listeners[eventId].Remove(lt);
 		}
 		else
 		{
-			Debug.LogWarning("failed to remove " + evtName + ", because cant find.");
+			Debug.LogWarning("failed to remove " + eventId + ", because cant find.");
 		}
 	}
 
@@ -44,7 +41,7 @@ public class EventManager : Singleton<EventManager>
 	{
 		Debug.Assert(lt != null, "CHECK");
 		
-		foreach (var kv in listeners)
+		foreach (var kv in _listeners)
 		{
 			if (kv.Value.ContainsKey(lt))
 			{
@@ -53,33 +50,33 @@ public class EventManager : Singleton<EventManager>
 		}
 	}
 
-	public void Dispatch(string name)
+	public void Dispatch(int eventId)
 	{
 		Event evt = new Event();
-		evt.name = name;
+		evt.eventId = eventId;
 		Dispatch(evt);
 	}
 
-	public void Dispatch(string name, int val)
+	public void Dispatch(int eventId, int val)
 	{
 		EventSimpleInt evt = new EventSimpleInt();
-		evt.name = name;
+		evt.eventId = eventId;
 		evt.val = val;
 		Dispatch(evt);
 	}
 
-	public void Dispatch(string name, float val)
+	public void Dispatch(int eventId, float val)
 	{
 		EventSimpleFloat evt = new EventSimpleFloat();
-		evt.name = name;
+		evt.eventId = eventId;
 		evt.val = val;
 		Dispatch(evt);
 	}
 
-	public void Dispatch(string name, string val)
+	public void Dispatch(int eventId, string val)
 	{
 		EventSimpleString evt = new EventSimpleString();
-		evt.name = name;
+		evt.eventId = eventId;
 		evt.val = val;
 		Dispatch(evt);
 	}
@@ -88,13 +85,13 @@ public class EventManager : Singleton<EventManager>
 	{
 		Debug.Assert(evt != null, "CHECK");
 
-		if (listeners.ContainsKey(evt.name) == false)
+		if (_listeners.ContainsKey(evt.eventId) == false)
 		{
-			Debug.LogWarning("failed to Dispatch event " + evt.name + ", because no listener.");
+			Debug.LogWarning("failed to Dispatch event " + evt.eventId + ", because no listener.");
 			return;
 		}
 
-		foreach (var kv in listeners[evt.name])
+		foreach (var kv in _listeners[evt.eventId])
 		{
 			kv.Value.Invoke(evt);
 		}

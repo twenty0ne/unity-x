@@ -6,7 +6,7 @@ public static class TimeUtils
 {
 	public static void WaitForSeconds(float seconds, System.Action callback)
 	{
-		CoroutineHandler.DoCoroutine(_WaitForSeconds(seconds, callback));
+		CoroutineHandler.StartStaticCoroutine(_WaitForSeconds(seconds, callback));
 	}
 
 	private static IEnumerator _WaitForSeconds(float seconds, System.Action callback)
